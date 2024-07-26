@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../helpers/AuthContext';
 
@@ -14,10 +13,6 @@ function Login() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (localStorage.getItem("accessToken")) {
-			navigate('/home');
-		}
-
 		// try {
 		// 	const fetchData = async() => {
 		// 		const result = await fetch(URL);
@@ -54,7 +49,6 @@ function Login() {
 					result.json().then(json => {
 						console.log("Existing User")
 						localStorage.setItem("accessToken", json.data[0].token);
-						navigate('/home');
 					})
 				}
 			}
@@ -65,29 +59,8 @@ function Login() {
         }
 	};
 
-	const CloseButton = () => {
-		const handleCloseApp = () => {
-			// Call the exposed API from the preload script
-			localStorage.removeItem("accessToken");
-			window.api.closeApp();
-		};
-
-		handleCloseApp();
-	};
-
 	return (
-		<div className='loginContainer'>
-			<label>Username:</label>
-			<input type='text' className='' onChange={(event) => { setUsername(event.target.value) }} />
-
-			<label>Password</label>
-			<input type='password' onChange={(event) => { setPassword(event.target.value) }} />
-
-			<button onClick={login}>Login</button>
-			<button onClick={CloseButton}>
-				Close App
-			</button>
-
+		<div className='homeContainer'>
 			{/* <div>
 				{books ? (
 					books.map((book, key) => {

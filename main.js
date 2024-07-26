@@ -11,7 +11,7 @@ function createWindow() {
 		// show: false,
 		// autoHideMenuBar: true,
   		// frame: false,
-		titleBarStyle: 'hidden',
+		// titleBarStyle: 'hidden',
 		// titleBarOverlay: true,
 		// titleBarOverlay: {
 		// 	color: '#2f3241',
@@ -25,7 +25,7 @@ function createWindow() {
 			enableRemoteModule: false, // Recommended for security
 		},
 	});
-	console.log(path.join(__dirname, 'preload.js'))
+
 	const startURL = isDev.default
 		? 'http://localhost:3000'
 		: `file://${path.join(__dirname, './build/index.html')}`;
