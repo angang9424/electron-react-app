@@ -65,16 +65,6 @@ function Login() {
         }
 	};
 
-	const CloseButton = () => {
-		const handleCloseApp = () => {
-			// Call the exposed API from the preload script
-			localStorage.removeItem("accessToken");
-			window.api.closeApp();
-		};
-
-		handleCloseApp();
-	};
-
 	return (
 		<div className='loginContainer'>
 			<label>Username:</label>
@@ -84,9 +74,6 @@ function Login() {
 			<input type='password' onChange={(event) => { setPassword(event.target.value) }} />
 
 			<button onClick={login}>Login</button>
-			<button onClick={CloseButton}>
-				Close App
-			</button>
 
 			{/* <div>
 				{books ? (

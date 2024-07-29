@@ -11,7 +11,7 @@ function createWindow() {
 		// show: false,
 		// autoHideMenuBar: true,
   		// frame: false,
-		// titleBarStyle: 'hidden',
+		titleBarStyle: 'hidden',
 		// titleBarOverlay: true,
 		// titleBarOverlay: {
 		// 	color: '#2f3241',
@@ -20,7 +20,7 @@ function createWindow() {
 		// },
 		webPreferences: {
 			nodeIntegration: true,
-			preload: path.join(__dirname, 'preload.js'),
+			preload: path.join(__dirname, './public/preload.js'),
 			contextIsolation: true, // Important for security and necessary for contextBridge
 			enableRemoteModule: false, // Recommended for security
 		},
