@@ -41,8 +41,8 @@ function Login() {
 
 			fetchData();
 		} catch (error) {
-            console.error('Error fetching data:', error);
-        }
+			console.error('Error fetching data:', error);
+		}
 	}, []);
 
 	const handleEdit = (rowId, columnKey, value) => {
@@ -89,8 +89,8 @@ function Login() {
 
 			saveData();
 		} catch (error) {
-            console.error('Error save data:', error);
-        }
+			console.error('Error save data:', error);
+		}
 	}
 
 	const Edit = (book_id, name, price) => {
@@ -107,11 +107,12 @@ function Login() {
 					<input type="text" id="name" defaultValue={name} onChange={(e) => document.getElementById(e.target.id).value = e.target.value} />
 					<input type="text" id="price" defaultValue={price} onChange={(e) => document.getElementById(e.target.id).value = e.target.value} />
 					<button onClick={ () => Save(book_id, document.getElementById('name').value, document.getElementById('price').value) }>Save</button>
+					<button onClick={ () => setButtonPopup(false) }>Cancel</button>
 				</div>
 			);
 		} catch (error) {
-            console.error('Error edit data:', error);
-        }
+			console.error('Error edit data:', error);
+		}
 	}
 
 	return (

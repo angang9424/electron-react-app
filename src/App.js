@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Login from './client/pages/Login';
 import Registration from './client/pages/Registration';
 import Home from './client/pages/Home';
+import Profile from './client/pages/UserProfile';
 
 function App() {
 	const navigate = useNavigate();
@@ -51,6 +52,7 @@ function App() {
 						</>
 					) : (
 						<>
+							<Link to='/profile'>Profile</Link>
 							<button onClick={logout}>Logout</button>
 						</>
 					)}
@@ -60,6 +62,7 @@ function App() {
 					<Route path='/' exact element={<Login />}/>
 					<Route path='/registration' exact element={<Registration />}/>
 					<Route path='/home' exact element={<Home />}/>
+					<Route path='/profile' exact element={<Profile />}/>
 				</Routes>
 			</AuthContext.Provider>
 		</div>

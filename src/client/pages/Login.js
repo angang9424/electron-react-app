@@ -7,7 +7,7 @@ function Login() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [books, setBooks] = useState([]);
-	const {setAuthState} = useContext(AuthContext);
+	const { setAuthState } = useContext(AuthContext);
 
 	const URL = `${process.env.REACT_APP_API_URL}/users/userLogin`;
 
@@ -37,32 +37,52 @@ function Login() {
 
 	const login = () => {
 		const user = { username: username, password: password };
-
-		try {
-			const postData = async() => {
-				const result = await fetch(URL, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(user)
+		axios.post(URL, user).then((response) => {
+			if (response.data.error) {
+				// alert(response.data.error);
+			} else {
+				const data = response.data.data;
+				localStorage.setItem("accessToken", data.token);
+				setAuthState({
+					username: data.username,
+					id: data.id,
+					status: true
 				});
-
-				if (!result.ok) {
-					throw new Error(`HTTP error! status: ${result.status}`);
-				} else {
-					result.json().then(json => {
-						console.log("Existing User")
-						localStorage.setItem("accessToken", json.data[0].token);
-						navigate('/home');
-					})
-				}
+				navigate(`/home`);
 			}
+		});
+		// const user = { username: username, password: password };
 
-			postData();
-		} catch (error) {
-            console.error('Error posting data:', error);
-        }
+		// try {
+		// 	const postData = async() => {
+		// 		const result = await fetch(URL, {
+		// 			method: 'POST',
+		// 			headers: {
+		// 				'Content-Type': 'application/json',
+		// 			},
+		// 			body: JSON.stringify(user)
+		// 		});
+
+		// 		if (!result.ok) {
+		// 			throw new Error(`HTTP error! status: ${result.status}`);
+		// 		} else {
+		// 			result.json().then(json => {
+		// 				console.log("Existing User", json)
+		// 				localStorage.setItem("accessToken", json.data.token);
+		// 				setAuthState({
+		// 					username: json.data.username,
+		// 					id: json.data.id,
+		// 					status: true
+		// 				});
+		// 				// navigate('/home');
+		// 			})
+		// 		}
+		// 	}
+
+		// 	postData();
+		// } catch (error) {
+        //     console.error('Error posting data:', error);
+        // }
 	};
 
 	return (

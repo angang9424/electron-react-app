@@ -19,7 +19,9 @@ function Registration() {
 	let navigate = useNavigate();
 
 	const onSubmit = (data) => {
-		const user = { username: data.username, password: data.password }
+		const utcDateTime = new Date().toISOString();
+		const utcDateConvertToLocal = new Date(utcDateTime);
+		const user = { username: data.username, password: data.password, created_modified: utcDateConvertToLocal }
 
 		try {
 			const postData = async() => {
