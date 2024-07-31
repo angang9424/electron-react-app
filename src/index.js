@@ -4,11 +4,13 @@ import './index.css';
 import App from './App';
 import { HashRouter as Router } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
+import { Toaster } from 'sonner';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 	<React.StrictMode>
 		<Router>
+			<Toaster position="bottom-right" expand={false} hideProgressBar={false} closeButton richColors  />
 			<App />
 		</Router>
 	</React.StrictMode>

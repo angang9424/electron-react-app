@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage, validateYupSchema } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 function Registration() {
 	const URL = `${process.env.REACT_APP_API_URL}/users`;
@@ -18,11 +19,13 @@ function Registration() {
 
 	let navigate = useNavigate();
 
-	const onSubmit = (data) => {
+	const onSubmit = async(data) => {
 		const utcDateTime = new Date().toISOString();
 		const utcDateConvertToLocal = new Date(utcDateTime);
 		const user = { username: data.username, password: data.password, created_modified: utcDateConvertToLocal }
-
+		// toast.success('Success', {
+		// 	description: 'User Register Success',
+		// })
 		try {
 			const postData = async() => {
 				const result = await fetch(URL, {
@@ -36,11 +39,21 @@ function Registration() {
 				if (!result.ok) {
 					throw new Error(`HTTP error! status: ${result.status}`);
 				} else {
+					// toast.success('Success', {
+					// 	description: 'User Register Success',
+					// })
 					navigate('/');
 				}
 			}
 
-			postData();
+			// postData();
+			toast.promise(postData, {
+				loading: 'Loading...',
+				success: () => {
+				  return `User has been registered`;
+				},
+				error: 'Error',
+			});
 		} catch (error) {
             console.error('Error posting data:', error);
         }
@@ -52,20 +65,22 @@ function Registration() {
 	};
 
 	return (
-		<div className='createPostPage'>
-			<Formik initialValues={initialValue} onSubmit={onSubmit} validationSchema={validationSchema}>
-				<Form className='formContainer'>
-					<label>Username: </label>
-					<ErrorMessage name='username' component='span'></ErrorMessage>
-					<Field id='inputCreatePost' name='username' placeholder='Username' autoComplete='off'></Field>
+		<div>
+			<div className='createPostPage'>
+				<Formik initialValues={initialValue} onSubmit={onSubmit} validationSchema={validationSchema}>
+					<Form className='formContainer'>
+						<label>Username: </label>
+						<ErrorMessage name='username' component='span'></ErrorMessage>
+						<Field id='inputCreatePost' name='username' placeholder='Username' autoComplete='off'></Field>
 
-					<label>Password: </label>
-					<ErrorMessage name='password' component='span'></ErrorMessage>
-					<Field type='password' id='inputCreatePost' name='password' placeholder='Password'></Field>
+						<label>Password: </label>
+						<ErrorMessage name='password' component='span'></ErrorMessage>
+						<Field type='password' id='inputCreatePost' name='password' placeholder='Password'></Field>
 
-					<button type='submit'>Register</button>
-				</Form>
-			</Formik>
+						<button type='submit'>Register</button>
+					</Form>
+				</Formik>
+			</div>
 		</div>
 	)
 }

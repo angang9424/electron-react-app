@@ -28,20 +28,24 @@ function Login() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		try {
-			const fetchData = async() => {
-				const result = await fetch(URL);
-				if (!result.ok) {
-					throw new Error(`HTTP error! status: ${result.status}`);
+		if (!localStorage.getItem("accessToken")) {
+			navigate('/login');
+		} else {
+			try {
+				const fetchData = async() => {
+					const result = await fetch(URL);
+					if (!result.ok) {
+						throw new Error(`HTTP error! status: ${result.status}`);
+					}
+					result.json().then(json => {
+						setBooks(json.data);
+					})
 				}
-				result.json().then(json => {
-					setBooks(json.data);
-				})
-			}
 
-			fetchData();
-		} catch (error) {
-			console.error('Error fetching data:', error);
+				fetchData();
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
 		}
 	}, []);
 

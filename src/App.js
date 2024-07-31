@@ -14,6 +14,9 @@ import Profile from './client/pages/UserProfile';
 function App() {
 	const navigate = useNavigate();
 
+	const [dropdown, setDropdown] = useState(false);
+	const [subDropdown, setSubDropdown] = useState(false);
+
 	const [authState, setAuthState] = useState({
 		username: "",
 		id: 0,
@@ -27,7 +30,7 @@ function App() {
 			id: 0,
 			status: false
 		});
-
+		setSubDropdown(false);
 		navigate('/');
 	};
 
@@ -47,21 +50,35 @@ function App() {
 				<div className='navbar'>
 					{!localStorage.getItem("accessToken") ? (
 						<>
-							<Link to='/'>Login</Link>
+							<Link to='/login'>Login</Link>
 							<Link to='/registration'>Registration</Link>
 						</>
 					) : (
 						<>
-							<Link to='/profile'>Profile</Link>
-							<button onClick={logout}>Logout</button>
+							<ul className="nav-items">
+								<li onMouseEnter={() => setDropdown(true)} onMouseLeave={() => setDropdown(false)}>
+									<Link>{ authState.username }</Link>
+									{dropdown && (
+										<>
+											<ul
+												className={subDropdown ? "services-submenu clicked" : "services-submenu"}
+											>
+												<li><Link to='/' onClick={() => setSubDropdown(false)}>Home</Link></li>
+												<li><Link to='/profile' onClick={() => setSubDropdown(false)}>Profile</Link></li>
+												<li><Link to='/login' onClick={logout}>Logout</Link></li>
+											</ul>
+										</>
+									)}
+								</li>
+							</ul>
 						</>
 					)}
-					<button onClick={CloseButton}>Close App</button>
+					<Link onClick={CloseButton}>Close App</Link>
 				</div>
 				<Routes>
-					<Route path='/' exact element={<Login />}/>
+					<Route path='/login' exact element={<Login />}/>
 					<Route path='/registration' exact element={<Registration />}/>
-					<Route path='/home' exact element={<Home />}/>
+					<Route path='/' exact element={<Home />}/>
 					<Route path='/profile' exact element={<Profile />}/>
 				</Routes>
 			</AuthContext.Provider>

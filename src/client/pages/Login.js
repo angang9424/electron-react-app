@@ -93,7 +93,7 @@ function Login() {
 			<label>Password</label>
 			<input type='password' onChange={(event) => { setPassword(event.target.value) }} />
 
-			<button onClick={login}>Login</button>
+			<button className='loginBtn' onClick={login}>Login</button>
 
 			{/* <div>
 				{books ? (
