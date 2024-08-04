@@ -1,16 +1,18 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../helpers/AuthContext';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Table from 'react-bootstrap/Table';
-
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Popup from '../components/Popup';
+import BooksTable from '../components/books/BooksTable';
 
-function Login() {
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
+
+// import { useSelection } from '@/hooks/use-selection';
+
+function Home() {
 	const [books, setBooks] = useState([]);
 	const [search, setSearch] = useState('');
 
@@ -21,14 +23,21 @@ function Login() {
 	const [buttonPopup, setButtonPopup] = useState(false);
 	const [popupContent, setPopupContent] = useState('');
 
-	const {setAuthState} = useContext(AuthContext);
+	const { authState, setAuthState } = useContext(AuthContext);
 
 	const URL = `${process.env.REACT_APP_API_URL}/books`;
 
 	const navigate = useNavigate();
 
+	// MUI GUI
+	// const { selectAll, deselectAll, selectOne, deselectOne, selected } = useSelection(rowIds);
+
+	// const selectedSome = (selected?.size ?? 0) > 0 && (selected?.size ?? 0) < rows.length;
+	// const selectedAll = rows.length > 0 && selected?.size === rows.length;
+
 	useEffect(() => {
-		if (!localStorage.getItem("accessToken")) {
+		if (!authState.status) {
+			localStorage.removeItem("accessToken");
 			navigate('/login');
 		} else {
 			try {
@@ -120,69 +129,82 @@ function Login() {
 	}
 
 	return (
-		<div className='homeContainer'>
-			<div>
-				<Container>
-					<Form>
-						<InputGroup className='my-3'>
-							<Form.Control onChange={(e) => setSearch(e.target.value)} placeholder='Search books' />
-						</InputGroup>
-					</Form>
+		// <div className='homeContainer'>
+		// 	<div>
+		// 		<Container>
+		// 			<Form>
+		// 				<InputGroup className='my-3'>
+		// 					<Form.Control onChange={(e) => setSearch(e.target.value)} placeholder='Search books' />
+		// 				</InputGroup>
+		// 			</Form>
 
-					<Table striped bordered hover>
-						<tbody>
-							{books ? (
-								books.filter((book) => {
-									return search.toLowerCase() === ''
-										? book
-										: book.name.toLowerCase().includes(search);
-								})
-								.map((book, key) => {
-									return <tr key={key}>
-										<td>{book.book_id}</td>
-										<td>{book.name}</td>
-										<td onClick={() => handleEdit(book.book_id, 'name', book.name)}>
-											{editRow === book.book_id && editColumn === 'name' ? (
-												<input
-												type="text"
-												value={editValue}
-												onChange={(e) => setEditValue(e.target.value)}
-												onBlur={handleSave}
-												/>
-											) : (
-												book.name
-											)}
-										</td>
-										<td onClick={() => handleEdit(book.book_id, 'price', book.price)}>
-											{editRow === book.book_id && editColumn === 'price' ? (
-												<input
-												type="text"
-												value={editValue}
-												onChange={(e) => setEditValue(e.target.value)}
-												onBlur={handleSave}
-												/>
-											) : (
-												book.price
-											)}
-										</td>
-										<td>
-											<button onClick={ () => Save(book.book_id, book.name, book.price) }>Save</button>
-											<button onClick={ () => Edit(book.book_id, book.name, book.price) }>Edit</button>
-											<Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
-												<div>{ popupContent }</div>
-											</Popup>
-										</td>
-									</tr>
-								})
-							) : (
-								<p>Loading...</p>
-							)}
-						</tbody>
-					</Table>
-				</Container>
-			</div>
-		</div>
+		// 			<Table striped bordered hover>
+		// 				<tbody>
+		// 					{books ? (
+		// 						books.filter((book) => {
+		// 							return search.toLowerCase() === ''
+		// 								? book
+		// 								: book.name.toLowerCase().includes(search);
+		// 						})
+		// 						.map((book, key) => {
+		// 							return <tr key={key}>
+		// 								<td>{book.book_id}</td>
+		// 								<td>{book.name}</td>
+		// 								<td onClick={() => handleEdit(book.book_id, 'name', book.name)}>
+		// 									{editRow === book.book_id && editColumn === 'name' ? (
+		// 										<input
+		// 										type="text"
+		// 										value={editValue}
+		// 										onChange={(e) => setEditValue(e.target.value)}
+		// 										onBlur={handleSave}
+		// 										/>
+		// 									) : (
+		// 										book.name
+		// 									)}
+		// 								</td>
+		// 								<td onClick={() => handleEdit(book.book_id, 'price', book.price)}>
+		// 									{editRow === book.book_id && editColumn === 'price' ? (
+		// 										<input
+		// 										type="text"
+		// 										value={editValue}
+		// 										onChange={(e) => setEditValue(e.target.value)}
+		// 										onBlur={handleSave}
+		// 										/>
+		// 									) : (
+		// 										book.price
+		// 									)}
+		// 								</td>
+		// 								<td>
+		// 									<button onClick={ () => Save(book.book_id, book.name, book.price) }>Save</button>
+		// 									<button onClick={ () => Edit(book.book_id, book.name, book.price) }>Edit</button>
+		// 									<Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+		// 										<div>{ popupContent }</div>
+		// 									</Popup>
+		// 								</td>
+		// 							</tr>
+		// 						})
+		// 					) : (
+		// 						<p>Loading...</p>
+		// 					)}
+		// 				</tbody>
+		// 			</Table>
+		// 		</Container>
+		// 	</div>
+		// </div>
+		<Stack spacing={3} style={{ paddingTop: '64px', paddingLeft: '24px', paddingRight: '24px' }}>
+			<Stack direction="row" spacing={3}>
+        		<Stack spacing={1} sx={{ flex: '1 1 auto' }}>
+          			<Typography variant="h4">Books</Typography>
+				</Stack>
+				<div>
+					<Button startIcon={<PlusIcon fontSize='20px' color='white' />} variant="contained"  style={{textTransform: 'none'}}>
+						Add
+					</Button>
+				</div>
+			</Stack>
+			<BooksTable />
+		</Stack>
 	)
 }
 
-export default Login
+export default Home;

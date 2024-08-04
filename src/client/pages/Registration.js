@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage, validateYupSchema } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 function Registration() {
@@ -65,22 +65,22 @@ function Registration() {
 	};
 
 	return (
-		<div>
-			<div className='createPostPage'>
-				<Formik initialValues={initialValue} onSubmit={onSubmit} validationSchema={validationSchema}>
-					<Form className='formContainer'>
-						<label>Username: </label>
-						<ErrorMessage name='username' component='span'></ErrorMessage>
-						<Field id='inputCreatePost' name='username' placeholder='Username' autoComplete='off'></Field>
+		<div className='registerContainer'>
+			<Formik initialValues={initialValue} onSubmit={onSubmit} validationSchema={validationSchema}>
+				<Form className='formContainer'>
+					<ErrorMessage name='username' component='span'></ErrorMessage>
+					<Field id='inputRegister' name='username' placeholder='Username' autoComplete='off'></Field>
 
-						<label>Password: </label>
-						<ErrorMessage name='password' component='span'></ErrorMessage>
-						<Field type='password' id='inputCreatePost' name='password' placeholder='Password'></Field>
+					<ErrorMessage name='password' component='span'></ErrorMessage>
+					<Field type='password' id='inputRegister' name='password' placeholder='Password'></Field>
 
-						<button type='submit'>Register</button>
-					</Form>
-				</Formik>
-			</div>
+					<button className='RegisterBtn' type='submit'>Register</button>
+
+					<div className="links">
+						<Link to='/login'>Login</Link>
+					</div>
+				</Form>
+			</Formik>
 		</div>
 	)
 }

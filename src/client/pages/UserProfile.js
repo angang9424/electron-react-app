@@ -5,6 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../helpers/AuthContext';
 import Popup from '../components/Popup';
 
+import UserProfileDetails from '../components/userProfile/UserProfileDetails';
+import UserInfo from '../components/userProfile/UserInfo';
+
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
+
 function UserProfile() {
 	const navigate = useNavigate();
 
@@ -66,37 +73,50 @@ function UserProfile() {
 	}
 
 	return (
-		<div className='userProfileContainer'>
-			<label>Username: { authState.username }</label>
-			<br />
+		// <div className='userProfileContainer'>
+		// 	<label>Username: { authState.username }</label>
+		// 	<br />
 
-			<button onClick={ () => setButtonPopup(true) }>Reset Password</button>
-			<Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
-				<div>
-					<div>
-						<h3>Reset Password:</h3>
-						<br />
+		// 	<button onClick={ () => setButtonPopup(true) }>Reset Password</button>
+		// 	<Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+		// 		<div>
+		// 			<div>
+		// 				<h3>Reset Password:</h3>
+		// 				<br />
 
-						<label>Old Password:</label>
-						<input type='password' onChange={(event) => { setOldPassword(event.target.value) }} />
-						<br />
+		// 				<label>Old Password:</label>
+		// 				<input type='password' onChange={(event) => { setOldPassword(event.target.value) }} />
+		// 				<br />
 
-						<label>New Password:</label>
-						<input type='password' onChange={(event) => { setNewPassword(event.target.value) }} />
-						<br />
+		// 				<label>New Password:</label>
+		// 				<input type='password' onChange={(event) => { setNewPassword(event.target.value) }} />
+		// 				<br />
 
-						<label>Repeat New Password:</label>
-						<input type='password' onChange={(event) => { setRePassword(event.target.value) }} />
-						<br />
-						<br />
+		// 				<label>Repeat New Password:</label>
+		// 				<input type='password' onChange={(event) => { setRePassword(event.target.value) }} />
+		// 				<br />
+		// 				<br />
 
-						<button onClick={ () => resetPassword() }>Save</button>
-						<button onClick={ () => setButtonPopup(false) }>Cancel</button>
-					</div>
-				</div>
-			</Popup>
-		</div>
+		// 				<button onClick={ () => resetPassword() }>Save</button>
+		// 				<button onClick={ () => setButtonPopup(false) }>Cancel</button>
+		// 			</div>
+		// 		</div>
+		// 	</Popup>
+		// </div>
+		<Stack spacing={3} style={{ paddingTop: '64px', paddingLeft: '24px', paddingRight: '24px' }}>
+			 <div>
+				<Typography variant="h4">Account</Typography>
+			</div>
+			<Grid container spacing={3}>
+				<Grid lg={4} md={6} xs={12}>
+					<UserInfo />
+				</Grid>
+				<Grid lg={8} md={6} xs={12}>
+					<UserProfileDetails />
+				</Grid>
+			</Grid>
+		</Stack>
 	)
 }
 
-export default UserProfile
+export default UserProfile;

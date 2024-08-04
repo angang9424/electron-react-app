@@ -1,21 +1,23 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../helpers/AuthContext';
 
 function Login() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [books, setBooks] = useState([]);
-	const { setAuthState } = useContext(AuthContext);
+	const { authState, setAuthState } = useContext(AuthContext);
 
 	const URL = `${process.env.REACT_APP_API_URL}/users/userLogin`;
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (localStorage.getItem("accessToken")) {
-			navigate('/home');
+		if (authState.status) {
+			navigate('/');
+		} else {
+			localStorage.removeItem("accessToken");
 		}
 
 		// try {
@@ -48,7 +50,7 @@ function Login() {
 					id: data.id,
 					status: true
 				});
-				navigate(`/home`);
+				navigate(`/`);
 			}
 		});
 		// const user = { username: username, password: password };
@@ -87,14 +89,18 @@ function Login() {
 
 	return (
 		<div className='loginContainer'>
-			<label>Username:</label>
-			<input type='text' className='' onChange={(event) => { setUsername(event.target.value) }} />
+			<div className="login">
+				<h2>3XAJ</h2>
+				<input type='text' className='' placeholder="Username" onChange={(event) => { setUsername(event.target.value) }} />
+				<input type='password' placeholder="Password" onChange={(event) => { setPassword(event.target.value) }} />
 
-			<label>Password</label>
-			<input type='password' onChange={(event) => { setPassword(event.target.value) }} />
+				<button className='loginBtn' onClick={login}>Login</button>
 
-			<button className='loginBtn' onClick={login}>Login</button>
-
+				<div className="links">
+					<Link>Forget Password</Link>
+					<Link to='/registration'>Signup</Link>
+				</div>
+			</div>
 			{/* <div>
 				{books ? (
 					books.map((book, key) => {
