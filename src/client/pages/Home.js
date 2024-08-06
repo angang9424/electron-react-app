@@ -1,14 +1,27 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../helpers/AuthContext';
+import axios from 'axios';
 
+import { AuthContext } from '../helpers/AuthContext';
 import Popup from '../components/Popup';
+
 import BooksTable from '../components/books/BooksTable';
 
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Unstable_Grid2';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import Box from '@mui/material/Box';
+
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
+
+import dayjs from 'dayjs';
 
 // import { useSelection } from '@/hooks/use-selection';
 
@@ -19,7 +32,6 @@ function Home() {
 	const [editRow, setEditRow] = useState(null);
 	const [editColumn, setEditColumn] = useState(null);
 	const [editValue, setEditValue] = useState('');
-
 	const [buttonPopup, setButtonPopup] = useState(false);
 	const [popupContent, setPopupContent] = useState('');
 
@@ -81,23 +93,37 @@ function Home() {
 		setEditValue('');
 	};
 
-	const Save = (book_id, name, price) => {
+	const Save = (name, price) => {
 		try {
 			// const currentLocalDateTime = new Date();
 			const utcDateTime = new Date().toISOString();
 			const utcDateConvertToLocal = new Date(utcDateTime);
 			const book = { name: name, price: price, modified: utcDateConvertToLocal };
 
-			const saveData = async() => {
-				const result = await fetch(`${URL}/${book_id}`, {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(book)
-				});
+			// const saveData = async() => {
+			// 	const result = await fetch(`${URL}`, {
+			// 		method: 'POST',
+			// 		headers: {
+			// 			'Content-Type': 'application/json',
+			// 		},
+			// 		body: JSON.stringify(book)
+			// 	});
 
-				setButtonPopup(false);
+			// 	setBooks([...comments, commentToAdd])
+			// 	setButtonPopup(false);
+			// }
+
+			const saveData = async() => {
+				axios.post(URL, book).then((response) => {
+					if (response.data.error) {
+						alert(response.data.error);
+					} else {
+						const data = response.data.data;
+						const bookToAdd = { book_id: data.book_id, name: name, price: price, modified: dayjs(utcDateConvertToLocal).format('MMM D, YYYY') };
+						setBooks([...books, bookToAdd]);
+						setButtonPopup(false);
+					}
+				});
 			}
 
 			saveData();
@@ -106,22 +132,38 @@ function Home() {
 		}
 	}
 
-	const Edit = (book_id, name, price) => {
+	const Add = () => {
 		try {
-			// const currentLocalDateTime = new Date();
-			const utcDateTime = new Date().toISOString();
-			const utcDateConvertToLocal = new Date(utcDateTime);
-
 			setButtonPopup(true);
 			setPopupContent(
-				<div>
-					<h3>Book Details:</h3>
-					<input type="text" id="book_id" value={book_id} readOnly />
-					<input type="text" id="name" defaultValue={name} onChange={(e) => document.getElementById(e.target.id).value = e.target.value} />
-					<input type="text" id="price" defaultValue={price} onChange={(e) => document.getElementById(e.target.id).value = e.target.value} />
-					<button onClick={ () => Save(book_id, document.getElementById('name').value, document.getElementById('price').value) }>Save</button>
-					<button onClick={ () => setButtonPopup(false) }>Cancel</button>
-				</div>
+				<Stack spacing={3} style={{ paddingTop: '64px', paddingLeft: '24px', paddingRight: '24px' }}>
+					<div>
+						<Typography variant="h5">Add New Book:</Typography>
+					</div>
+					<Card>
+						<CardContent>
+							<Grid container spacing={3}>
+								<Grid md={6} xs={12}>
+									<FormControl fullWidth required>
+										<InputLabel>Book Name</InputLabel>
+										<OutlinedInput label="Book Name" name="name" id='name' onChange={(e) => document.getElementById(e.target.name).value = e.target.value} />
+									</FormControl>
+								</Grid>
+								<Grid md={6} xs={12}>
+									<FormControl fullWidth required>
+										<InputLabel>Price</InputLabel>
+										<OutlinedInput label="Price" name="price" id='price' onChange={(e) => document.getElementById(e.target.name).value = e.target.value} />
+									</FormControl>
+								</Grid>
+							</Grid>
+						</CardContent>
+
+						<CardActions sx={{ justifyContent: 'flex-end' }}>
+							<Button variant="contained" style={{textTransform: 'none'}} onClick={() => Save(document.getElementById('name').value, document.getElementById('price').value)}>Add</Button>
+							<Button variant="contained" style={{textTransform: 'none'}} onClick={() => setButtonPopup(false)}>Cancel</Button>
+						</CardActions>
+					</Card>
+				</Stack>
 			);
 		} catch (error) {
 			console.error('Error edit data:', error);
@@ -197,12 +239,15 @@ function Home() {
           			<Typography variant="h4">Books</Typography>
 				</Stack>
 				<div>
-					<Button startIcon={<PlusIcon fontSize='20px' color='white' />} variant="contained"  style={{textTransform: 'none'}}>
+					<Button startIcon={<PlusIcon fontSize='20px' color='white' />} variant="contained"  style={{textTransform: 'none'}} onClick={ Add }>
 						Add
 					</Button>
 				</div>
 			</Stack>
-			<BooksTable />
+			<Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+				<div>{ popupContent }</div>
+			</Popup>
+			<BooksTable books={books} />
 		</Stack>
 	)
 }
