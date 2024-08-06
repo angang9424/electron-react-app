@@ -26,6 +26,9 @@ import dayjs from 'dayjs';
 // import { useSelection } from '@/hooks/use-selection';
 
 function Home() {
+	const page = 0;
+	const rowsPerPage = 5;
+
 	const [books, setBooks] = useState([]);
 	const [search, setSearch] = useState('');
 
@@ -70,28 +73,28 @@ function Home() {
 		}
 	}, []);
 
-	const handleEdit = (rowId, columnKey, value) => {
-		setEditRow(rowId);
-		setEditColumn(columnKey);
-		setEditValue(value);
-	};
+	// const handleEdit = (rowId, columnKey, value) => {
+	// 	setEditRow(rowId);
+	// 	setEditColumn(columnKey);
+	// 	setEditValue(value);
+	// };
 
-	const handleSave = () => {
-		setBooks((prevData) =>
-			prevData.map((book) =>
-				book.book_id === editRow ? { ...book, [editColumn]: editValue } : book
-			)
-		);
-		setEditRow(null);
-		setEditColumn(null);
-		setEditValue('');
-	};
+	// const handleSave = () => {
+	// 	setBooks((prevData) =>
+	// 		prevData.map((book) =>
+	// 			book.book_id === editRow ? { ...book, [editColumn]: editValue } : book
+	// 		)
+	// 	);
+	// 	setEditRow(null);
+	// 	setEditColumn(null);
+	// 	setEditValue('');
+	// };
 
-	const handleCancel = () => {
-		setEditRow(null);
-		setEditColumn(null);
-		setEditValue('');
-	};
+	// const handleCancel = () => {
+	// 	setEditRow(null);
+	// 	setEditColumn(null);
+	// 	setEditValue('');
+	// };
 
 	const Save = (name, price) => {
 		try {
@@ -247,7 +250,13 @@ function Home() {
 			<Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
 				<div>{ popupContent }</div>
 			</Popup>
-			<BooksTable books={books} />
+			<BooksTable
+				books={books}
+				paginatedBooks={books.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)}
+				counts={books.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length}
+				pages={page}
+				rowsPerPages={rowsPerPage}
+			/>
 		</Stack>
 	)
 }

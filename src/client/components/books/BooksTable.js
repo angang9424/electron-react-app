@@ -21,14 +21,20 @@ import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import TablePagination from '@mui/material/TablePagination';
 
 import EditIcon from '@mui/icons-material/Edit';
 
 import dayjs from 'dayjs';
+import { CrownSimple } from '@phosphor-icons/react/dist/ssr';
 
-function BooksTable({books}) {
+function BooksTable({books, paginatedBooks, counts = 0, pages = 0, rowsPerPages = 0}) {
 	const [buttonPopup, setButtonPopup] = useState(false);
 	const [popupContent, setPopupContent] = useState('');
+	const [page, setPage] = useState(pages);
+	const [rowsPerPage, setRowsPerPage] = useState(rowsPerPages);
+	const [paginatedBook, setPaginatedBook] = useState(paginatedBooks);
+	const [count, setCount] = useState(counts);
 
 	const { authState, setAuthState } = useContext(AuthContext);
 
@@ -42,6 +48,18 @@ function BooksTable({books}) {
 			navigate('/login');
 		}
 	}, []);
+
+	useEffect(() => {
+		setPaginatedBook(paginatedBooks);
+	}, [paginatedBooks]);
+
+	useEffect(() => {
+		setCount(counts);
+	}, [counts]);
+
+	// useEffect(() => {
+	// 	setRowsPerPage(rowsPerPages);
+	// }, [rowsPerPages]);
 
 	const Save = (book_id, name, price) => {
 		try {
@@ -119,7 +137,17 @@ function BooksTable({books}) {
 			console.error('Error edit data:', error);
 		}
 	}
-	console.log(books)
+
+	const onPageChange = (event, newPage) => {
+		setPage(newPage);
+		setPaginatedBook(books.slice(newPage * rowsPerPage, newPage * rowsPerPage + rowsPerPage));
+	}
+
+	const onRowsPerPageChange = (event) => {
+		setRowsPerPage(event.target.value);
+		setPaginatedBook(books.slice(page * event.target.value, page * event.target.value + event.target.value));
+	}
+
 	return (
 		<Card>
 			<Box sx={{ overflowX: 'auto' }}>
@@ -148,7 +176,7 @@ function BooksTable({books}) {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{books.map((book) => {
+						{paginatedBook.map((book) => {
 							// const isSelected = selected?.has(row.id);
 
 							return (
@@ -191,15 +219,15 @@ function BooksTable({books}) {
 				<div>{ popupContent }</div>
 			</Popup>
 			<Divider />
-			{/* <TablePagination
+			<TablePagination
 				component="div"
-				count={count}
-				onPageChange={noop}
-				onRowsPerPageChange={noop}
+				count={books.length}
+				onPageChange={onPageChange}
+				onRowsPerPageChange={onRowsPerPageChange}
 				page={page}
 				rowsPerPage={rowsPerPage}
 				rowsPerPageOptions={[5, 10, 25]}
-			/> */}
+			/>
 		</Card>
 	)
 }
