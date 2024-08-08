@@ -376,3 +376,7 @@ button {
 .nav-item a:hover {
 	background: rgb(0, 212, 212);
 }
+
+.tablePagination-div div, .tablePagination-div button, .tablePagination-div svg {
+	position: inherit;
+}

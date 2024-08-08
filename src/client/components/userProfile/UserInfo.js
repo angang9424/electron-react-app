@@ -1,6 +1,4 @@
-import React, { useContext } from 'react';
-
-import { AuthContext } from '../../helpers/AuthContext';
+import React from 'react';
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -11,9 +9,7 @@ import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-function UserInfo() {
-	const { authState } = useContext(AuthContext);
-
+function UserInfo({first_name, last_name}) {
 	return (
 		<Card>
 			<CardContent>
@@ -22,7 +18,7 @@ function UserInfo() {
 						<Avatar sx={{ height: '80px', width: '80px' }} />
 					</div>
 					<Stack spacing={1} sx={{ textAlign: 'center' }}>
-						<Typography variant="h5">{ authState.username }</Typography>
+						<Typography variant="h5">{ first_name } { last_name }</Typography>
 						<Typography color="text.secondary" variant="body2">
 							{/* {user.city} {user.country} */}
 							Los Angeles USA
