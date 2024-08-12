@@ -49,13 +49,6 @@ function BooksTable({books = [], pages = 0, rowsPerPages = 0, editData, deleteDa
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (!authState.status) {
-			localStorage.removeItem("accessToken");
-			navigate('/login');
-		}
-	}, []);
-
-	useEffect(() => {
 		setPaginatedBook(books.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage));
 	}, [books]);
 
@@ -94,7 +87,7 @@ function BooksTable({books = [], pages = 0, rowsPerPages = 0, editData, deleteDa
 								<Grid md={6} xs={12}>
 									<FormControl fullWidth>
 										<InputLabel>Category</InputLabel>
-										<Select defaultValue={category} label="Category" name="category" id="category" variant="outlined"  onChange={(e) => document.getElementById(e.target.name).value = e.target.value}>
+										<Select defaultValue={category} label="Category" name="category" id="category" variant="outlined" onChange={(e) => document.getElementById(e.target.name).value = e.target.value}>
 											{categories.map((category) => (
 												<MenuItem key={category.value} value={category.value}>
 													{category.label}

@@ -11,6 +11,8 @@ import Registration from './client/pages/Registration';
 import Home from './client/pages/Home';
 import Profile from './client/pages/UserProfile';
 import Books from './client/pages/Books';
+import PurchaseOrder from './client/pages/PurchaseOrder';
+import PurchaseOrderDetails from '../src/client/components/purchaseOrder/PurchaseOrderDetails';
 
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -31,7 +33,6 @@ function App() {
 	const [subDropdown, setSubDropdown] = useState(false);
 	const [anchor, setAnchor] = useState(null);
 	
-
 	const [authState, setAuthState] = useState({
 		username: "",
 		id: 0,
@@ -73,6 +74,9 @@ function App() {
 							<ul className="nav-items">
 								<li>
 									<Link to='/books' className='dropdownBtn'>Books</Link>
+								</li>
+								<li>
+									<Link to='/purchase_order' className='dropdownBtn'>Purchase Order</Link>
 								</li>
 								<li onClick={popoverDropdown}>
 									<Link className='dropdownBtn'>{ authState.username }</Link>
@@ -127,6 +131,8 @@ function App() {
 					<Route path='/' exact element={<Home />}/>
 					<Route path='/profile' exact element={<Profile />}/>
 					<Route path='/books' exact element={<Books />}/>
+					<Route path='/purchase_order' exact element={<PurchaseOrder />}/>
+					<Route path='/purchase_order_details' exact element={<PurchaseOrderDetails />}/>
 				</Routes>
 			</AuthContext.Provider>
 		</div>
