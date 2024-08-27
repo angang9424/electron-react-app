@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { AuthContext } from '../helpers/AuthContext';
-import Popup from '../components/Popup';
 
 import UserProfileDetails from '../components/userProfile/UserProfileDetails';
 import UserInfo from '../components/userProfile/UserInfo';
@@ -18,7 +17,6 @@ function UserProfile() {
 	const [oldPassword, setOldPassword] = useState('');
 	const [newPassword, setNewPassword] = useState('');
 	const [rePassword, setRePassword] = useState('');
-	const [popupContent, setPopupContent] = useState('');
 	const [ firstName, setFirstName ] = useState('');
 	const [ lastName, setLastName ] = useState('');
 	const [ email, setEmail ] = useState('');
@@ -35,6 +33,7 @@ function UserProfile() {
 			localStorage.removeItem("accessToken");
 			navigate('/login');
 		} else {
+			console.log(authState)
 			try {
 				const user = { username: authState.username };
 
