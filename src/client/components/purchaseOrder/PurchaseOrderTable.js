@@ -83,6 +83,7 @@ function PurchaseOrderTable({pos = [], pages = 0, rowsPerPages = 0, editData, de
 			</Box>
 			<Divider />
 			<TablePagination className="tablePagination-div"
+				style={{position: 'relative'}}
 				component="div"
 				count={pos.length}
 				onPageChange={onPageChange}

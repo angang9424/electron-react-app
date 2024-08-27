@@ -14,6 +14,7 @@ import FormControl from '@mui/material/FormControl';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -21,6 +22,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
+
 
 import dayjs from 'dayjs';
 
@@ -151,15 +153,20 @@ function PurchaseOrderDetails() {
 			const utcDateTime = new Date().toISOString();
 			const utcDateConvertToLocal = new Date(utcDateTime);
 
+			const po = { modified_by: authState.username, modified: utcDateConvertToLocal };
+			console.log(po)
 			const deleteChildData = async() => {
-				await axios.delete(`${URL}/updatedeletechildbyid/${order_id}`).then((response) => {
-					console.log(response)
+				await axios.delete(`${URL}/updatedeletechildbyid/${order_id}`, { params: { 
+					modified_by: authState.username, 
+					modified: utcDateConvertToLocal 
+				}}).then((response) => {
 					if (response.data.error) {
 						alert(response.data.error);
 					} else {
 						const data = response.data.data;
-						console.log(data)
-						SaveChild(order_id)
+						console.log(response.data.msg)
+						console.log(response.data)
+						SaveChild(order_id);
 					}
 				});
 			}
@@ -257,6 +264,36 @@ function PurchaseOrderDetails() {
 		setTotalAmount(total_amount);
 	}
 
+	const Delete = (event) => {
+		try {
+			const utcDateTime = new Date().toISOString();
+			const utcDateConvertToLocal = new Date(utcDateTime);
+			// const po_date = new Date(event.target.date.value);
+			// const po = { date: po_date, total_amount: totalAmount, modified_by: authState.username, modified: utcDateConvertToLocal };
+
+			const deleteData = async() => {
+				await axios.delete(`${URL}/${id}`).then((response) => {
+					if (response.data.error) {
+						alert(response.data.error);
+					} else {
+						// const data = response.data.data;
+						navigate('/purchase_order');
+					}
+				});
+			}
+
+			toast.promise(deleteData, {
+				loading: 'Loading...',
+				success: () => {
+				  return `PO has been deleted`;
+				},
+				error: 'Error',
+			});
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 	return (
 		<form onSubmit={id ? (Update) : (Save)}>
 			<Stack spacing={3} style={{ paddingTop: '64px', paddingBottom: '64px', paddingLeft: '24px', paddingRight: '24px' }}>
@@ -265,6 +302,7 @@ function PurchaseOrderDetails() {
 						<Typography variant="h4">{id ? (id) : ('New Purchase Order')}</Typography>
 					</Stack>
 					<div>
+						<Button style={{backgroundColor:'red'}} variant="contained" onClick={(event) => Delete()}><DeleteIcon /></Button>
 						<Button type="submit" variant="contained" style={{textTransform: 'none'}}>
 							{id ? ('Update') : ('Save')}
 						</Button>
