@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -30,6 +31,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import dayjs from 'dayjs';
+import zIndex from '@mui/material/styles/zIndex';
 
 function BooksTable({books = [], pages = 0, rowsPerPages = 0, editData, deleteData}) {
 	const categories = [
@@ -65,61 +67,66 @@ function BooksTable({books = [], pages = 0, rowsPerPages = 0, editData, deleteDa
 		try {
 			setButtonPopup(true);
 			setPopupContent(
-				<Stack spacing={3} style={{ paddingTop: '64px', paddingLeft: '24px', paddingRight: '24px' }}>
-					<div>
-						<Typography variant="h5">Book Details:</Typography>
-					</div>
-					<Card>
-						<CardContent>
-							<Grid container spacing={3}>
-								<Grid md={6} xs={12}>
-									<FormControl fullWidth>
-										<InputLabel>Book ID</InputLabel>
-										<OutlinedInput value={book_id} label="Book ID" name="book_id" readOnly />
-									</FormControl>
-								</Grid>
-								<Grid md={6} xs={12}>
-									<FormControl fullWidth required>
-										<InputLabel>Book Name</InputLabel>
-										<OutlinedInput defaultValue={name} label="Book Name" name="name" id='name' onChange={(e) => document.getElementById(e.target.name).value = e.target.value} />
-									</FormControl>
-								</Grid>
-								<Grid md={6} xs={12}>
-									<FormControl fullWidth>
-										<InputLabel>Category</InputLabel>
-										<Select defaultValue={category} label="Category" name="category" id="category" variant="outlined" onChange={(e) => document.getElementById(e.target.name).value = e.target.value}>
-											{categories.map((category) => (
-												<MenuItem key={category.value} value={category.value}>
-													{category.label}
-												</MenuItem>
-											))}
-										</Select>
-									</FormControl>
-								</Grid>
-								<Grid md={6} xs={12}>
-									<FormControl fullWidth required>
-										{/* <InputLabel>Price</InputLabel>
-										<OutlinedInput defaultValue={price} label="Price" name="price" id='price' onChange={(e) => document.getElementById(e.target.name).value = e.target.value} /> */}
-										<InputLabel htmlFor="outlined-adornment-amount">Price</InputLabel>
-										<OutlinedInput
-											startAdornment={<InputAdornment position="start">$</InputAdornment>}
-											defaultValue={price}
-											label="Price"
-											name="price"
-											id='price'
-											onChange={(e) => document.getElementById(e.target.name).value = e.target.value}
-										/>
-									</FormControl>
-								</Grid>
-							</Grid>
-						</CardContent>
+				<Card>
+					<Box sx={{ overflowX: 'auto' }}>
+						<Stack spacing={3} style={{ paddingTop: '64px', paddingLeft: '24px', paddingRight: '24px' }}>
+							<div>
+								<Typography variant="h5">Book Details:</Typography>
+							</div>
+							<Card>
+								<CardContent>
+									<Grid container spacing={3}>
+										<Grid md={6} xs={12}>
+											<FormControl fullWidth>
+												<InputLabel>Book ID</InputLabel>
+												<OutlinedInput value={book_id} label="Book ID" name="book_id" readOnly />
+											</FormControl>
+										</Grid>
+										<Grid md={6} xs={12}>
+											<FormControl fullWidth required error={true}>
+												<InputLabel>Book Name</InputLabel>
+												<OutlinedInput defaultValue={name} label="Book Name" name="name" id='name' onChange={(e) => document.getElementById(e.target.name).value = e.target.value} />
+											</FormControl>
+										</Grid>
+										<Grid md={6} xs={12}>
+											<FormControl fullWidth  error={true}>
+												<InputLabel>Category</InputLabel>
+												<Select defaultValue={category} label="Category" name="category" id="category" variant="outlined" onChange={(e) => document.getElementById(e.target.name).value = e.target.value}>
+													{categories.map((category) => (
+														<MenuItem key={category.value} value={category.value}>
+															{category.label}
+														</MenuItem>
+													))}
+												</Select>
+												<FormHelperText>Error: Invalid category selected</FormHelperText>
+											</FormControl>
+										</Grid>
+										<Grid md={6} xs={12}>
+											<FormControl fullWidth required>
+												{/* <InputLabel>Price</InputLabel>
+												<OutlinedInput defaultValue={price} label="Price" name="price" id='price' onChange={(e) => document.getElementById(e.target.name).value = e.target.value} /> */}
+												<InputLabel htmlFor="outlined-adornment-amount">Price</InputLabel>
+												<OutlinedInput
+													startAdornment={<InputAdornment position="start">$</InputAdornment>}
+													defaultValue={price}
+													label="Price"
+													name="price"
+													id='price'
+													onChange={(e) => document.getElementById(e.target.name).value = e.target.value}
+												/>
+											</FormControl>
+										</Grid>
+									</Grid>
+								</CardContent>
 
-						<CardActions sx={{ justifyContent: 'flex-end' }}>
-							<Button variant="contained" style={{textTransform: 'none'}} onClick={() => saveData(book_id, document.getElementById('name').value, document.getElementById('price').value)}>Save</Button>
-							<Button variant="contained" style={{textTransform: 'none'}} onClick={() => setButtonPopup(false)}>Cancel</Button>
-						</CardActions>
-					</Card>
-				</Stack>
+								<CardActions sx={{ justifyContent: 'flex-end' }}>
+									<Button variant="contained" style={{textTransform: 'none'}} onClick={() => saveData(book_id, document.getElementById('name').value, document.getElementById('price').value)}>Save</Button>
+									<Button variant="contained" style={{textTransform: 'none'}} onClick={() => setButtonPopup(false)}>Cancel</Button>
+								</CardActions>
+							</Card>
+						</Stack>
+					</Box>
+				</Card>
 				// <div>
 				// 	<h3>Book Details:</h3>
 				// 	<input type="text" id="book_id" value={book_id} readOnly />
@@ -214,11 +221,12 @@ function BooksTable({books = [], pages = 0, rowsPerPages = 0, editData, deleteDa
 					</TableBody>
 				</Table>
 			</Box>
-			<Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+			<Popup trigger={buttonPopup} setTrigger={setButtonPopup} style={{zIndex: '1'}}>
 				<div>{ popupContent }</div>
 			</Popup>
 			<Divider />
 			<TablePagination className="tablePagination-div"
+				style={{position: 'inherit'}}
 				component="div"
 				count={books.length}
 				onPageChange={onPageChange}
