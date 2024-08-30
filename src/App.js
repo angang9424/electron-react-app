@@ -14,6 +14,8 @@ import PurchaseOrder from './client/pages/PurchaseOrder';
 import PurchaseOrderDetails from '../src/client/components/purchaseOrder/PurchaseOrderDetails';
 import SalesOrder from './client/pages/SalesOrder';
 import SalesOrderDetails from '../src/client/components/salesOrder/SalesOrderDetails';
+import POS from '../src/client/pages/POS';
+
 import MainNav from './client/components/MainNav';
 import SideNav from './client/components/SideNav';
 
@@ -144,6 +146,7 @@ function App() {
 									<Route path='/purchase_order_details' exact element={<PurchaseOrderDetails />}/>
 									<Route path='/sales_order' exact element={<SalesOrder />}/>
 									<Route path='/sales_order_details' exact element={<SalesOrderDetails />}/>
+									<Route path='/pos' exact element={<POS />}/>
 								</Routes>
 							</Container>
 						</Box>

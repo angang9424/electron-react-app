@@ -276,6 +276,57 @@ function MobileNav({onClose, open}) {
 							</Box>
 						</Link>
 					</li>
+					<li>
+						<Link to='/pos' className='dropdownBtn' style={{textDecoration: 'none'}}>
+							<Box
+								// {...(href
+								// 	? {
+								// 		component: external ? 'a' : RouterLink,
+								// 		href,
+								// 		target: external ? '_blank' : undefined,
+								// 		rel: external ? 'noreferrer' : undefined,
+								// 	}
+								// 	: { role: 'button' })}
+									sx={{
+										alignItems: 'center',
+										borderRadius: 1,
+										color: 'var(--NavItem-color)',
+										cursor: 'pointer',
+										display: 'flex',
+										flex: '0 0 auto',
+										gap: 1,
+										p: '6px 16px',
+										position: 'relative',
+										textDecoration: 'none',
+										whiteSpace: 'nowrap',
+										bgcolor: 'var(--NavItem-disabled-background)',
+										color: 'var(--NavItem-disabled-color)',
+										// cursor: 'not-allowed',
+										// bgcolor: 'var(--NavItem-active-background)',
+										// color: 'var(--NavItem-active-color)'
+										...((currentPathname === '/pos') && { bgcolor: 'var(--NavItem-active-background)', color: 'var(--NavItem-active-color)' }),
+									}}
+							>
+								<Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'center', flex: '0 0 auto' }}>
+									{/* {Icon ? (
+										<Icon
+											fill={active ? 'var(--NavItem-icon-active-color)' : 'var(--NavItem-icon-color)'}
+											fontSize="var(--icon-fontSize-md)"
+											weight={active ? 'fill' : undefined}
+										/>
+									) : null} */}
+								</Box>
+								<Box sx={{ flex: '1 1 auto' }}>
+									<Typography
+										component="span"
+										sx={{ color: 'inherit', fontSize: '0.875rem', fontWeight: 500, lineHeight: '28px' }}
+									>
+										POS
+									</Typography>
+								</Box>
+							</Box>
+						</Link>
+					</li>
 				</Stack>
 			</Box>
 			<Divider sx={{ borderColor: '#434a60' }} />
