@@ -24,7 +24,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 
-
 import dayjs from 'dayjs';
 
 function SalesOrderDetails() {
@@ -36,7 +35,7 @@ function SalesOrderDetails() {
 	const [rows, setRows] = useState([{ idx: 1, item: '', qty: 0, rate: 0, amount: 0, id: 0, stock_qty: 0 }]);
 	const [date, setDate] = useState('');
 	const [totalAmount, setTotalAmount] = useState(0);
-	const [qtyError, setQtyError] = useState('');
+	const [qtyError, setQtyError] = useState(Array(rows.length).fill(''));
 
 	const { authState, setAuthState } = useContext(AuthContext);
 
@@ -100,7 +99,7 @@ function SalesOrderDetails() {
 			const utcDateTime = new Date().toISOString();
 			const utcDateConvertToLocal = new Date(utcDateTime);
 			const so_date = new Date(event.target.date.value);
-			const so = { date: so_date, total_amount: totalAmount, created_modified_by: authState.username, modified: utcDateConvertToLocal };
+			const so = { date: so_date, total_amount: totalAmount, items: rows, created_modified_by: authState.username, modified: utcDateConvertToLocal };
 
 			const saveData = async() => {
 				await axios.post(`${URL}`, so).then((response) => {
@@ -109,7 +108,7 @@ function SalesOrderDetails() {
 					} else {
 						const data = response.data.data;
 						setID(data.id);
-						SaveChild(data.id);
+						// SaveChild(data.id);
 					}
 				});
 			}
@@ -119,10 +118,22 @@ function SalesOrderDetails() {
 				success: () => {
 				  return `SO has been created`;
 				},
-				error: 'Error',
+				error: (err) => {
+					// setQtyError('Error: Qty more than Stock QTY');
+					const items = err.response?.data?.data.items;
+					setRows(items);
+					items.forEach((row, index) => {
+						if (row.qty > row.stock_qty) {
+							qtyErrorHandler(index, true);
+						} else {
+							qtyErrorHandler(index, false);
+						}
+					});
+					return `Error: ${err.response?.data?.msg}`;
+				},
 			});
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 		}
 	};
 
@@ -157,7 +168,7 @@ function SalesOrderDetails() {
 			const utcDateConvertToLocal = new Date(utcDateTime);
 
 			const deleteChildData = async() => {
-				await axios.delete(`${URL}/updatedeletechildbyid/${order_id}`, { params: { 
+				await axios.delete(`${URL}/updatedeletechildbyid/${order_id}`, {params: { 
 					modified_by: authState.username, 
 					modified: utcDateConvertToLocal 
 				}}).then((response) => {
@@ -207,7 +218,7 @@ function SalesOrderDetails() {
 		}
 	}
 
-	const calTotalAmt = (items, item_value, qty) => {
+	const calTotalAmt = (index, items, item_value, qty) => {
 		let stock_qty = 0;
 		let rate = 0;
 		let amount = 0;
@@ -219,9 +230,11 @@ function SalesOrderDetails() {
 				amount = qty * val.price;
 
 				if (qty > stock_qty) {
-					setQtyError('Error: Qty more than Stock QTY');
+					// setQtyError('Error: Qty more than Stock QTY');
+					qtyErrorHandler(index, true);
 				} else {
-					setQtyError('');
+					// setQtyError('');
+					qtyErrorHandler(index, false);
 				}
 			};
 		});
@@ -230,7 +243,7 @@ function SalesOrderDetails() {
 	}
 
 	const editRow = (e, index, items) => {
-		let {stock_qty, rate, amount} = calTotalAmt(items, rows[index].item, e.target.value);
+		let {stock_qty, rate, amount} = calTotalAmt(index, items, rows[index].item, e.target.value);
 
 		const updatedRow = {
 			...rows[index],
@@ -247,7 +260,7 @@ function SalesOrderDetails() {
 	}
 
 	const editBookSelectRow = async (e, index, items) => {
-		let {stock_qty, rate, amount} = calTotalAmt(items, e.target.value, rows[index].qty);
+		let {stock_qty, rate, amount} = calTotalAmt(index, items, e.target.value, rows[index].qty);
 
 		const updatedRow = {
 			...rows[index],
@@ -261,7 +274,6 @@ function SalesOrderDetails() {
 		const updatedRows = [...rows];
 		updatedRows[index] = updatedRow;
 		setRows(updatedRows);
-		setQtyError('');
 		calTotalAmount(updatedRows);
 	}
 
@@ -283,7 +295,7 @@ function SalesOrderDetails() {
 			// const po = { date: po_date, total_amount: totalAmount, modified_by: authState.username, modified: utcDateConvertToLocal };
 
 			const deleteData = async() => {
-				await axios.delete(`${URL}/${id}`, { params: { 
+				await axios.delete(`${URL}/${id}`, {params: { 
 					modified_by: authState.username, 
 					modified: utcDateConvertToLocal 
 				}}).then((response) => {
@@ -305,6 +317,22 @@ function SalesOrderDetails() {
 			});
 		} catch (error) {
 			console.log(error)
+		}
+	}
+
+	const qtyErrorHandler = async (index, error) => {
+		if (error) {
+			setQtyError((prevErrors) => {
+				const newQtyError = [...prevErrors];
+				newQtyError[index] = 'Error: Qty more than Stock QTY';
+				return newQtyError;
+			});
+		} else {
+			setQtyError((prevErrors) => {
+				const newQtyError = [...prevErrors];
+				newQtyError[index] = '';
+				return newQtyError;
+			});
 		}
 	}
 

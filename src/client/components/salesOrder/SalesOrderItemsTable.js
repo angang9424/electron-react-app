@@ -39,7 +39,7 @@ function SalesOrderItemsTable({rows, editRow, editBookSelectRow, qtyError}) {
 		} catch (error) {
 			console.error('Error fetching data:', error);
 		}
-	}, []);
+	}, [rows]);
 
 	return (
 		<Stack spacing={3} style={{ paddingTop: '24px', paddingBottom: '24px', paddingLeft: '24px', paddingRight: '24px' }}>
@@ -61,18 +61,20 @@ function SalesOrderItemsTable({rows, editRow, editBookSelectRow, qtyError}) {
 								<TableRow hover key={row.idx}>
 									<TableCell style={{width: '5%'}}>{row.idx}</TableCell>
 									<TableCell style={{width: '35%'}}>
-										<Select style={{width: '100%'}} value={row.item} name="item" id="item" variant="outlined" onChange={(e) => editBookSelectRow(e, index, books)}>
-											{books.map((book) => (
-												<MenuItem key={book.book_id} value={book.book_id}>
-													{book.name}
-												</MenuItem>
-											))}
-										</Select>
+										<FormControl fullWidth required>
+											<Select style={{width: '100%'}} value={row.item} name="item" id="item" variant="outlined" onChange={(e) => editBookSelectRow(e, index, books)}>
+												{books.map((book) => (
+													<MenuItem key={book.book_id} value={book.book_id}>
+														{book.name}
+													</MenuItem>
+												))}
+											</Select>
+										</FormControl>
 									</TableCell>
 									<TableCell style={{width: '20%'}}>
-										<FormControl fullWidth required error={!!qtyError}>
+										<FormControl fullWidth required error={!!qtyError[index]}>
 											<OutlinedInput value={row.qty} name="qty" id='qty' onChange={(e) => editRow(e, index, books)} />
-											{qtyError && <FormHelperText>{qtyError}</FormHelperText>}
+											{!!qtyError[index] && <FormHelperText>{qtyError[index]}</FormHelperText>}
 										</FormControl>
 									</TableCell>
 									<TableCell style={{width: '20%'}}>{row.stock_qty}</TableCell>

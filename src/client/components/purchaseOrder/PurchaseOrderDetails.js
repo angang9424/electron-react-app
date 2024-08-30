@@ -156,7 +156,7 @@ function PurchaseOrderDetails() {
 			const po = { modified_by: authState.username, modified: utcDateConvertToLocal };
 			console.log(po)
 			const deleteChildData = async() => {
-				await axios.delete(`${URL}/updatedeletechildbyid/${order_id}`, { params: { 
+				await axios.delete(`${URL}/updatedeletechildbyid/${order_id}`, {params: { 
 					modified_by: authState.username, 
 					modified: utcDateConvertToLocal 
 				}}).then((response) => {
@@ -272,7 +272,10 @@ function PurchaseOrderDetails() {
 			// const po = { date: po_date, total_amount: totalAmount, modified_by: authState.username, modified: utcDateConvertToLocal };
 
 			const deleteData = async() => {
-				await axios.delete(`${URL}/${id}`).then((response) => {
+				await axios.delete(`${URL}/${id}`, {params: { 
+					modified_by: authState.username, 
+					modified: utcDateConvertToLocal 
+				}}).then((response) => {
 					if (response.data.error) {
 						alert(response.data.error);
 					} else {

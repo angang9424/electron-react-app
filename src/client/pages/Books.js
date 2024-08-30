@@ -83,6 +83,26 @@ function Books() {
 		}
 	}, []);
 
+	const test = (event) => {
+		try {
+			const saveData = async() => {
+				await axios.get(`${process.env.REACT_APP_API_URL}/books/test`).then((response) => {
+					console.log(response.data)
+				});
+			}
+
+			toast.promise(saveData, {
+				loading: 'Loading...',
+				success: () => {
+				  return `SO has been created`;
+				},
+				error: (err) => `Error: ${err.response?.data?.msg}`,
+			});
+		} catch (error) {
+			console.log(error)
+		}
+	};
+
 	const Save = (name, price, category) => {
 		try {
 			// const currentLocalDateTime = new Date();
@@ -309,6 +329,9 @@ function Books() {
           			<Typography variant="h4">Books</Typography>
 				</Stack>
 				<div>
+					<Button startIcon={<PlusIcon fontSize='20px' color='white' />} variant="contained"  style={{textTransform: 'none'}} onClick={ test }>
+						test
+					</Button>
 					<Button startIcon={<PlusIcon fontSize='20px' color='white' />} variant="contained"  style={{textTransform: 'none'}} onClick={ Add }>
 						Add
 					</Button>

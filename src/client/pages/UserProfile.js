@@ -17,10 +17,10 @@ function UserProfile() {
 	const [oldPassword, setOldPassword] = useState('');
 	const [newPassword, setNewPassword] = useState('');
 	const [rePassword, setRePassword] = useState('');
-	const [ firstName, setFirstName ] = useState('');
-	const [ lastName, setLastName ] = useState('');
-	const [ email, setEmail ] = useState('');
-	const [ phoneNumber, setPhoneNumber ] = useState('');
+	const [firstName, setFirstName] = useState('');
+	const [lastName, setLastName] = useState('');
+	const [email, setEmail] = useState('');
+	const [phoneNumber, setPhoneNumber] = useState('');
 
 	const navigate = useNavigate();
 
